@@ -11,76 +11,61 @@ struct Livro {
 struct Livro livros[100];
 int total = 0;
 
-int menu() {
-    printf("\n=== BIBLIOTECA ===\n");
-    printf("1. Cadastrar livro\n");
-    printf("2. Listar livros\n");
-    printf("3. Verificar disponibilidade\n");
-    printf("4. Buscar por ano\n");
-    printf("0. Sair\n");
-    printf("Opcao: ");
-    return 0;
-}
-
-int cadastrar() {
-    printf("\n-- Cadastro de Livro --\n");
-    printf("Titulo: ");
-    scanf(" %[^\n]", livros[total].titulo);
-    printf("Autor: ");
-    scanf(" %[^\n]", livros[total].autor);
-    printf("Ano: ");
-    scanf("%d", &livros[total].ano);
-    printf("Quantidade: ");
-    scanf("%d", &livros[total].qtd);
+void cadastrar() {
+    printf("Titulo: "); scanf(" %49[^\n]", livros[total].titulo);
+    printf("Autor: ");  scanf(" %49[^\n]", livros[total].autor);
+    printf("Ano: ");    scanf("%d", &livros[total].ano);
+    printf("Qtd: ");    scanf("%d", &livros[total].qtd);
     total++;
-    printf("Livro cadastrado!\n");
-    return 0;
+    printf("Cadastrado!\n");
 }
 
-int listar() {
-    if (total == 0) { printf("Nenhum livro cadastrado.\n"); return 0; }
-    for (int i = 0; i < total; i++) {
-        char *status = livros[i].qtd > 0 ? "Disponivel" : "Indisponivel";
-        printf("\n[%d] %s - %s (%d) | Qtd: %d | %s\n",
-            i+1, livros[i].titulo, livros[i].autor,
-            livros[i].ano, livros[i].qtd, status);
+void listar() {
+    if (total == 0) {
+        printf("Nenhum livro.\n");
+        return;
     }
-    return 0;
+    for (int i = 0; i < total; i++) {
+        printf("\n[%d] %s - %s (%d)\n", i+1, livros[i].titulo, livros[i].autor, livros[i].ano);
+        if (livros[i].qtd > 0)
+            printf("Disponivel | Qtd: %d\n", livros[i].qtd);
+        else
+            printf("Indisponivel\n");
+    }
 }
 
-int verificar() {
+void verificar() {
     char busca[50];
     printf("Titulo: ");
-    scanf(" %[^\n]", busca);
+    scanf(" %49[^\n]", busca);
     for (int i = 0; i < total; i++) {
         if (strcmp(livros[i].titulo, busca) == 0) {
             if (livros[i].qtd > 0)
-                printf("Disponivel! Quantidade: %d\n", livros[i].qtd);
+                printf("Disponivel! Qtd: %d\n", livros[i].qtd);
             else
                 printf("Indisponivel.\n");
-            return 0;
+            return;
         }
     }
-    printf("Livro nao encontrado.\n");
-    return 0;
+    printf("Nao encontrado.\n");
 }
 
-int buscarAno() {
+void buscarAno() {
     int ano;
-    printf("Mostrar livros apos o ano: ");
+    printf("Apos o ano: ");
     scanf("%d", &ano);
     for (int i = 0; i < total; i++) {
         if (livros[i].ano > ano)
             printf("%s (%d)\n", livros[i].titulo, livros[i].ano);
     }
-    return 0;
 }
 
 int main() {
     int op;
     do {
-        menu();
-        scanf("%d", &op);
+        printf("\n1-Cadastrar\n2-Listar\n3-Verificar\n4-Buscar Ano\n0-Sair\nOpcao: ");
+        if (scanf("%d", &op) != 1) op = -1;
+        scanf("%*[^\n]");
         switch (op) {
             case 1: cadastrar(); break;
             case 2: listar();    break;

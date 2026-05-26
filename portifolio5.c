@@ -1,88 +1,111 @@
-/**
- * struct -- ***
-2. if/else
-3. while
-4. for
-5. switch -- ***
-6. Funções
-7. Menu de opções
-8. Cadastro de dados
-9. Listagem dos dados cadastrados
-10. Algum cálculo ou validação
- */
-
 #include <stdio.h>
-#include <string.h>
 
-struct Dinherio
-{
+struct Dinheiro {
     char nome[50];
-    float dinherioMensal;
+    float renda;
     float gastosVariaveis;
     float gastosFixos;
 };
-void menu()
-{
-    printf("\n=== AJUDAR SALARIO MENSAL ===\n");
-    printf("1. Informe seu Nome\n");
-    printf("2. Dinheiro Mensal\n");
-    printf("3. Gastos Variaveis\n");
-    printf("4. Gastos Fixos\n");
-    printf("5. Resumo\n");
+
+struct Dinheiro d[100];
+int total = 0;
+
+void menu() {
+    printf("\n=== SALARIO MENSAL ===\n");
+    printf("1. Novo cadastro\n");
+    printf("2. Adicionar renda\n");
+    printf("3. Adicionar gasto variavel\n");
+    printf("4. Adicionar gasto fixo\n");
+    printf("5. Ver resumo\n");
     printf("0. Sair\n");
     printf("Opcao: ");
 }
 
-int main()
-{
+int main() {
     int opcao;
-    struct Dinherio d[100];
-    int cadastrados = 0;
-    do
-    {
+
+    do {
         menu();
-        scanf("%d", &opcao);
-        switch (opcao)
-        {
-        case 1:
-            printf("Informe seu Nome\n");
-            scanf(" %[^\n]", d[cadastrados].nome);
-            break;
-        case 2:
-            printf("Informe sua Renda Mensal\n"); // faltou isso
-            scanf("%f", &d[cadastrados].dinherioMensal);
-            break;
-        case 3:
-            printf("Informe seu Gastos Variaveis\n");
-            scanf(" %f", &d[cadastrados].gastosVariaveis);
+        if (scanf("%d", &opcao) != 1) opcao = -1;
+        scanf("%*[^\n]");
 
-            float saldoParcial = d[cadastrados].dinherioMensal - d[cadastrados].gastosVariaveis;
+        switch (opcao) {
+            case 1:
+                if (total >= 100) {
+                    printf("Limite atingido!\n");
+                } else {
+                    printf("Nome: ");
+                    scanf(" %49[^\n]", d[total].nome);
+                    d[total].renda = 0;
+                    d[total].gastosVariaveis = 0;
+                    d[total].gastosFixos = 0;
+                    total++;
+                }
+                break;
 
-            printf("Saldo parcial: R$ %.2f\n", saldoParcial);
-            break;
-        case 4:
-            printf("Informe seu Gastos Fixos\n");
-            scanf(" %f", &d[cadastrados].gastosFixos);
-            cadastrados++;
-            break;
-        case 5:
-            for (int i = 0; i < cadastrados; i++)
-            {
-                float saldo = d[i].dinherioMensal - d[i].gastosVariaveis - d[i].gastosFixos;
-                printf("Nome: %s\n", d[i].nome);
-                printf("Renda: R$ %.2f\n", d[i].dinherioMensal);
-                printf("Gastos Variaveis: R$ %.2f\n", d[i].gastosVariaveis);
-                printf("Gastos Fixos: R$ %.2f\n", d[i].gastosFixos);
-                if (saldo >= 0)
-                    printf("Saldo: R$ %.2f (positivo)\n\n", saldo);
-                else
-                    printf("Saldo: R$ %.2f (negativo)\n\n", saldo);
-            }
-            break;
+            case 2:
+                if (total == 0) {
+                    printf("Cadastre alguem primeiro!\n");
+                } else {
+                    printf("Renda: ");
+                    scanf("%f", &d[total-1].renda);
+                    scanf("%*[^\n]");
+                }
+                break;
 
-        default:
-            break;
+            case 3:
+                if (total == 0) {
+                    printf("Cadastre alguem primeiro!\n");
+                } else {
+                    float v;
+                    printf("Gasto variavel: ");
+                    scanf("%f", &v);
+                    scanf("%*[^\n]");
+                    d[total-1].gastosVariaveis += v;
+                    printf("Total variaveis: R$ %.2f\n", d[total-1].gastosVariaveis);
+                }
+                break;
+
+            case 4:
+                if (total == 0) {
+                    printf("Cadastre alguem primeiro!\n");
+                } else {
+                    float f;
+                    printf("Gasto fixo: ");
+                    scanf("%f", &f);
+                    scanf("%*[^\n]");
+                    d[total-1].gastosFixos += f;
+                    printf("Total fixos: R$ %.2f\n", d[total-1].gastosFixos);
+                }
+                break;
+
+            case 5:
+                if (total == 0) {
+                    printf("Nenhum cadastro.\n");
+                } else {
+                    for (int i = 0; i < total; i++) {
+                        float saldo = d[i].renda - d[i].gastosVariaveis - d[i].gastosFixos;
+                        printf("\nNome: %s\n", d[i].nome);
+                        printf("Renda: R$ %.2f\n", d[i].renda);
+                        printf("Gastos Variaveis: R$ %.2f\n", d[i].gastosVariaveis);
+                        printf("Gastos Fixos: R$ %.2f\n", d[i].gastosFixos);
+                        if (saldo >= 0)
+                            printf("Saldo: R$ %.2f (positivo)\n", saldo);
+                        else
+                            printf("Saldo: R$ %.2f (negativo)\n", saldo);
+                    }
+                }
+                break;
+
+            case 0:
+                printf("Ate logo!\n");
+                break;
+
+            default:
+                printf("Opcao invalida!\n");
         }
+
     } while (opcao != 0);
+
     return 0;
 }
